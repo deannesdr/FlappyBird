@@ -5,7 +5,7 @@ import java.util.Random;
 import javax.swing.*;
 
 
-public class FlappyBird extends JPanel {
+public class FlappyBird extends JPanel implements ActionListener{
     int boardwidth = 360;
     int boardheight = 640;
 
@@ -36,6 +36,7 @@ public class FlappyBird extends JPanel {
 
     //game logic
     Bird bird;
+    Timer gameloop;
     
     FlappyBird(){
         setPreferredSize(new Dimension(boardwidth, boardheight));
@@ -49,6 +50,10 @@ public class FlappyBird extends JPanel {
         
 
         bird = new Bird(birdImg);
+
+        //bird 
+        gameloop = new Timer(1000/60, this);
+        gameloop.start();
     }
 
     public void paintComponent(Graphics g){
@@ -63,4 +68,12 @@ public class FlappyBird extends JPanel {
         g.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height, null);
     
     }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        repaint();
+    
+    }
+
+
 }

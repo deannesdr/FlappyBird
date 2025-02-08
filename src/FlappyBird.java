@@ -5,7 +5,7 @@ import java.util.Random;
 import javax.swing.*;
 
 
-public class FlappyBird extends JPanel implements ActionListener{
+public class FlappyBird extends JPanel implements ActionListener, KeyListener{
     int boardwidth = 360;
     int boardheight = 640;
 
@@ -36,13 +36,15 @@ public class FlappyBird extends JPanel implements ActionListener{
 
     //game logic
     Bird bird;
-    int velocityY = -9;
+    int velocityY = 0;
     Timer gameloop;
     int gravity = 1;
     
     FlappyBird(){
         setPreferredSize(new Dimension(boardwidth, boardheight));
         //setBackground(Color.blue);
+        setFocusable(true);
+        addKeyListener(this);
 
         //load images
         background = new ImageIcon(getClass().getResource("./flappybirdbg.png")).getImage();
@@ -64,7 +66,7 @@ public class FlappyBird extends JPanel implements ActionListener{
     }
 
     public void draw(Graphics g){
-        System.out.println("draw");
+        //System.out.println("draw");
         //background
         g.drawImage(background, 0, 0, boardwidth,boardheight, null);    
     
@@ -84,6 +86,20 @@ public class FlappyBird extends JPanel implements ActionListener{
         move();
         repaint();
     
+    }
+    @Override
+    public void keyPressed(KeyEvent e) {
+       if (e.getKeyCode() == KeyEvent.VK_SPACE){
+           velocityY = -9;
+       }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
     }
 
 

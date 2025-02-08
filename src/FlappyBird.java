@@ -34,11 +34,36 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener{
     
     }
 
+    //pipes
+    int pipeX = boardwidth;
+    int pipeY = 0;
+    int pipeWidth = 64;
+    int pipeHeight = 512;
+
+    class Pipe{
+        int x = pipeX;
+        int y = pipeY;
+        int width = pipeWidth;
+        int height = pipeHeight;
+        Image img;
+        boolean passed = false;
+
+        Pipe(Image img){
+            this.img = img;
+        }
+    }    
+
     //game logic
     Bird bird;
+    int velocityX = -4;
     int velocityY = 0;
-    Timer gameloop;
     int gravity = 1;
+
+    ArrayList<Pipe> pipes;
+
+    Timer gameloop;
+    Timer placePipesTimer;
+
     
     FlappyBird(){
         setPreferredSize(new Dimension(boardwidth, boardheight));
@@ -54,10 +79,34 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener{
         
 
         bird = new Bird(birdImg);
+        pipes = new ArrayList<Pipe>();
+
+        //place pipes timer
+        placePipesTimer = new Timer(1500, new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                placePipes();
+            }
+        });
+
+        placePipesTimer.start();
 
         //bird 
         gameloop = new Timer(1000/60, this);
         gameloop.start();
+    }
+
+    public void placePipes(){
+        int randomPipeY = (int) (pipeY - pipeHeight/4 - Math.random()*(pipeHeight/2));
+        int openingSpace = boardheight/4;
+        
+        Pipe topPipe = new Pipe(topPipeImg);
+        topPipe.y = randomPipeY;
+        pipes.add(topPipe);
+
+        Pipe botPipe = new Pipe(botPipeImg);
+        botPipe.y = topPipe.y + pipeHeight + openingSpace;
+        pipes.add(botPipe);
     }
 
     public void paintComponent(Graphics g){
@@ -72,12 +121,25 @@ public class FlappyBird extends JPanel implements ActionListener, KeyListener{
     
         g.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height, null);
     
+        for(int i = 0; i < pipes.size(); i++){
+            Pipe p = pipes.get(i);
+            g.drawImage(p.img, p.x, p.y, p.width, p.height, null);
+        }
     }
 
     public void move(){
         velocityY += gravity;
         bird.y += velocityY;
         bird.y = Math.max(bird.y, 0);
+
+        //pipes
+        for (int i = 0; i < pipes.size(); i++){
+            Pipe p = pipes.get(i);
+            p.x += velocityX;
+            if (p.x + p.width < 0){
+                pipes.remove(i);
+            }
+        }
 
     }
 

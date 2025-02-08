@@ -17,6 +17,7 @@ public class App {
         FlappyBird flappyBird = new FlappyBird(); // Creating a new FlappyBird object
         frame.add(flappyBird); // Adding the FlappyBird object to the frame
         frame.pack(); // Sizes the frame so that all its contents are at or above their preferred sizes
+       flappyBird.requestFocus();
         frame.setVisible(true);
     
     
